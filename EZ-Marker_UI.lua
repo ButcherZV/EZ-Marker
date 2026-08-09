@@ -372,7 +372,7 @@ kbSub:SetPoint("TOPRIGHT", -18, BELOW_Y - 43)
 kbSub:SetHeight(28)
 kbSub:SetJustifyH("CENTER")
 kbSub:SetTextColor(0.75, 0.75, 0.75)
-kbSub:SetText("Find \"Mark Target\" & \"Remove Mark\" and press any key or keycombination")
+kbSub:SetText("https://github.com/ButcherZV/EZ-Marker")
 
 -- Separator above bottom buttons  (BELOW_Y - 76)
 local sep3 = panel:CreateTexture(nil, "ARTWORK")
