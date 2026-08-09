@@ -89,9 +89,8 @@ Open via the **minimap button** (left-click) or type `/ezm`.
 
 ## Notes & Limitations
 
-- **Requires raid leader or assistant rank** to apply marks in a raid group. In a 5-man party anyone can mark.
-- The addon tracks enemies by **name**. In the rare case where two enemies in the same fight share the exact same name, the cleanup logic may free the wrong slot - use **Reset Tracking** if the order gets out of sync.
-- **Remove Mark** only works on your currently selected target. There is no way to remove a mark from an enemy not currently targeted by anyone in your group.
+- **Requires raid leader or assistant rank** to apply marks in a raid group.
+- **Remove Mark** only works on your currently selected target.
 - Settings (mark order and minimap position) are saved per-account in `EZMarkerDB`.
 
 ---

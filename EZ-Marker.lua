@@ -56,34 +56,24 @@ end
 -- Internal helpers
 -- ============================================================
 
--- Release the slot held by a specific unit name.
-local function FreeMarkForUnit(unitName)
-    if not unitName or unitName == "" or unitName == "Unknown" then return end
-    for idx, name in pairs(usedMarks) do
-        if name == unitName then
-            usedMarks[idx] = nil
-            return
+-- Scan every accessible unit token; free any tracked mark slot whose
+-- mark index is no longer on a living unit.  Purely index-based so it
+-- works correctly even when multiple enemies share the same name.
+local function FreeDead()
+    -- Collect which mark indices are currently on a live unit.
+    local liveIndices = {}
+    for _, token in ipairs(SCAN_TOKENS) do
+        if UnitExists(token) and not UnitIsDead(token) then
+            local idx = GetRaidTargetIndex(token)
+            if idx and idx ~= 0 then
+                liveIndices[idx] = true
+            end
         end
     end
-end
-
--- Scan every accessible unit token; free marks belonging to dead units
--- and free any mark index that has been moved to a different unit.
--- Called on multiple events so at least one catches each death.
-local function FreeDead()
-    for _, token in ipairs(SCAN_TOKENS) do
-        if UnitExists(token) then
-            -- Free mark if the unit is dead
-            if UnitIsDead(token) then
-                FreeMarkForUnit(UnitName(token))
-            end
-            -- Free mark if it moved to a unit with a different name
-            local idx = GetRaidTargetIndex(token)
-            if idx and idx ~= 0 and usedMarks[idx] then
-                if UnitName(token) ~= usedMarks[idx] then
-                    usedMarks[idx] = nil
-                end
-            end
+    -- Free every tracked slot whose mark is no longer on a live unit.
+    for idx in pairs(usedMarks) do
+        if not liveIndices[idx] then
+            usedMarks[idx] = nil
         end
     end
 end
