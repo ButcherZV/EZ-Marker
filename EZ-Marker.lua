@@ -122,22 +122,25 @@ end
 function EZMarker:MarkNextTarget()
     -- --------------------------------------------------------
     -- Role / group check
-    -- Only the group leader can mark (party or raid).
-    -- In a raid, assistants are also allowed (WoW standard).
-    -- Solo players can always mark.
+    -- Must be in a party or raid AND be the group leader.
+    -- In a raid, assistants are also permitted (WoW standard).
+    -- Solo players cannot mark.
     -- --------------------------------------------------------
     local inParty = GetNumPartyMembers and GetNumPartyMembers() > 0
     local inRaid  = GetNumRaidMembers  and GetNumRaidMembers()  > 0
 
-    if inParty or inRaid then
-        local isLeader  = UnitIsGroupLeader and UnitIsGroupLeader("player")
-        local isOfficer = inRaid and IsRaidOfficer and IsRaidOfficer()
-        if not isLeader and not isOfficer then
-            Print("|cffFF4444Cannot mark:|r Only the |cffFFFF00party/raid leader|r" ..
-                  (inRaid and " or |cffFFFF00Raid Assistant|r" or "") ..
-                  " can apply marks.")
-            return
-        end
+    if not inParty and not inRaid then
+        Print("|cffFF4444Cannot mark:|r You must be in a |cffFFFF00party or raid|r to apply marks.")
+        return
+    end
+
+    local isLeader  = UnitIsGroupLeader and UnitIsGroupLeader("player")
+    local isOfficer = inRaid and IsRaidOfficer and IsRaidOfficer()
+    if not isLeader and not isOfficer then
+        Print("|cffFF4444Cannot mark:|r Only the |cffFFFF00party/raid leader|r" ..
+              (inRaid and " or |cffFFFF00Raid Assistant|r" or "") ..
+              " can apply marks.")
+        return
     end
 
     if not UnitExists("target") then
