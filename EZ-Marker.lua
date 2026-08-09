@@ -56,24 +56,16 @@ end
 -- Internal helpers
 -- ============================================================
 
--- Scan every accessible unit token; free any tracked mark slot whose
--- mark index is no longer on a living unit.  Purely index-based so it
--- works correctly even when multiple enemies share the same name.
+-- Scan every accessible unit token; free any tracked slot whose mark
+-- index is held by a dead unit.  Index-based, so same-name enemies
+-- are handled correctly.
 local function FreeDead()
-    -- Collect which mark indices are currently on a live unit.
-    local liveIndices = {}
     for _, token in ipairs(SCAN_TOKENS) do
-        if UnitExists(token) and not UnitIsDead(token) then
+        if UnitExists(token) and UnitIsDead(token) then
             local idx = GetRaidTargetIndex(token)
-            if idx and idx ~= 0 then
-                liveIndices[idx] = true
+            if idx and idx ~= 0 and usedMarks[idx] then
+                usedMarks[idx] = nil
             end
-        end
-    end
-    -- Free every tracked slot whose mark is no longer on a live unit.
-    for idx in pairs(usedMarks) do
-        if not liveIndices[idx] then
-            usedMarks[idx] = nil
         end
     end
 end
