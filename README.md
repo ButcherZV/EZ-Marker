@@ -1,4 +1,6 @@
 # EZ-Marker
+![Settings screen](https://i.postimg.cc/5tj42dD2/ez.jpg)
+
 
 A WoW addon for **TurtleWoW / OctoWoW (1.12 client)** that automatically assigns raid target markers to enemies in a configurable priority order. Marks are freed automatically when their target dies, so the raid always fights in the same order without you having to manually manage icons.
 
@@ -17,13 +19,19 @@ A WoW addon for **TurtleWoW / OctoWoW (1.12 client)** that automatically assigns
 
 ## Installation
 
-1. Copy the `EZ-Marker` folder into your addons directory:
+1. Copy the `EZ-Marker-main` folder into your addons directory:
    ```
    <WoW>\Interface\AddOns\EZ-Marker\
    ```
-2. Remove "-master" from the folder name (if it has one);
+2. Remove "-master" from the folder name;
 3. Launch the game and make sure the addon is enabled in the character select screen.
 
+OR
+
+Just paste this into OctoLauncher Addon manager and it will be installed and updated by OctoLauncher
+```
+https://github.com/ButcherZV/EZ-Marker.git
+```
 ---
 
 ## Setting Up Hotkeys
