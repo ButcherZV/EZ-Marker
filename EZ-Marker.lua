@@ -120,6 +120,26 @@ end
 -- Press the hotkey -> apply the next free mark to the current
 -- hostile target.
 function EZMarker:MarkNextTarget()
+    -- --------------------------------------------------------
+    -- Role / group check
+    -- Only the group leader can mark (party or raid).
+    -- In a raid, assistants are also allowed (WoW standard).
+    -- Solo players can always mark.
+    -- --------------------------------------------------------
+    local inParty = GetNumPartyMembers and GetNumPartyMembers() > 0
+    local inRaid  = GetNumRaidMembers  and GetNumRaidMembers()  > 0
+
+    if inParty or inRaid then
+        local isLeader  = UnitIsGroupLeader and UnitIsGroupLeader("player")
+        local isOfficer = inRaid and IsRaidOfficer and IsRaidOfficer()
+        if not isLeader and not isOfficer then
+            Print("|cffFF4444Cannot mark:|r Only the |cffFFFF00party/raid leader|r" ..
+                  (inRaid and " or |cffFFFF00Raid Assistant|r" or "") ..
+                  " can apply marks.")
+            return
+        end
+    end
+
     if not UnitExists("target") then
         Print("No target selected.")
         return
