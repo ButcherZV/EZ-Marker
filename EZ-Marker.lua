@@ -130,7 +130,9 @@ function EZMarker:MarkNextTarget()
         return
     end
 
-    local isLeader  = UnitIsGroupLeader and UnitIsGroupLeader("player")
+    -- IsPartyLeader() is the correct 1.12 API; UnitIsGroupLeader was added later
+    local isLeader  = (IsPartyLeader and IsPartyLeader()) or
+                      (UnitIsGroupLeader and UnitIsGroupLeader("player"))
     local isOfficer = inRaid and IsRaidOfficer and IsRaidOfficer()
     if not isLeader and not isOfficer then
         Print("|cffFF4444Cannot mark:|r Only the |cffFFFF00party/raid leader|r" ..
