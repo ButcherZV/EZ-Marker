@@ -6,12 +6,12 @@ A WoW addon for **TurtleWoW / OctoWoW (1.12 client)** that automatically assigns
 
 ## Features
 
-- **One hotkey to mark** — press it on each enemy and they get the next available mark in your configured order (Skull → Cross → Square → Moon → Triangle → Diamond → Circle → Star by default)
-- **Automatic mark cleanup** — when a marked enemy dies its slot is freed and the next enemy will get that mark again, always starting from priority #1
-- **Remove mark hotkey** — instantly removes the mark from your currently targeted enemy and frees the slot
-- **Drag-to-reorder UI** — open the settings panel and drag the 8 marker icons to set your preferred kill priority
-- **Minimap button** — draggable button for quick access; right-click resets tracking
-- **Saved settings** — your custom mark order persists across sessions and reloads
+- **One hotkey to mark** - press it on each enemy and they get the next available mark in your configured order (Skull → Cross → Square → Moon → Triangle → Diamond → Circle → Star by default)
+- **Automatic mark cleanup** - when a marked enemy dies its slot is freed and the next enemy will get that mark again, always starting from priority #1
+- **Remove mark hotkey** - instantly removes the mark from your currently targeted enemy and frees the slot
+- **Drag-to-reorder UI** - open the settings panel and drag the 8 marker icons to set your preferred kill priority
+- **Minimap button** - draggable button for quick access; right-click resets tracking
+- **Saved settings** - your custom mark order persists across sessions and reloads
 
 ---
 
@@ -61,7 +61,7 @@ Open via the **minimap button** (left-click) or type `/ezm`.
 | Control | Action |
 |---|---|
 | **Drag icons** | Reorder mark priority (leftmost = first assigned) |
-| **Reset Tracking** button | Clears the addon's internal memory — the addon forgets which marks are active and starts from #1 again. Visual icons on enemies remain until they die. |
+| **Reset Tracking** button | Clears the addon's internal memory - the addon forgets which marks are active and starts from #1 again. Visual icons on enemies remain until they die. |
 | **Default Order** button | Restores the default Skull → Cross → Square → Moon → Triangle → Diamond → Circle → Star order |
 
 ---
@@ -90,7 +90,7 @@ Open via the **minimap button** (left-click) or type `/ezm`.
 ## Notes & Limitations
 
 - **Requires raid leader or assistant rank** to apply marks in a raid group. In a 5-man party anyone can mark.
-- The addon tracks enemies by **name**. In the rare case where two enemies in the same fight share the exact same name, the cleanup logic may free the wrong slot — use **Reset Tracking** if the order gets out of sync.
+- The addon tracks enemies by **name**. In the rare case where two enemies in the same fight share the exact same name, the cleanup logic may free the wrong slot - use **Reset Tracking** if the order gets out of sync.
 - **Remove Mark** only works on your currently selected target. There is no way to remove a mark from an enemy not currently targeted by anyone in your group.
 - Settings (mark order and minimap position) are saved per-account in `EZMarkerDB`.
 
