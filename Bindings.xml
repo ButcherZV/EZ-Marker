@@ -1,0 +1,8 @@
+<Bindings>
+  <Binding name="EZMARKERMARK" header="EZMARKER" description="Apply mark (current target)">
+    EZMarker:MarkNextTarget()
+  </Binding>
+  <Binding name="EZMARKERREMOVE" header="EZMARKER" description="Remove Mark (current target)">
+    EZMarker:RemoveCurrentMark()
+  </Binding>
+</Bindings>

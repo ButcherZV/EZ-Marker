@@ -1,0 +1,10 @@
+## Interface: 11200
+## Title: EZ-Marker
+## Notes: Assign raid marks to enemies in configurable priority order. Marks free up when targets die.
+## Author: ButcherZV
+## Version: 1.0
+## SavedVariables: EZMarkerDB
+
+Bindings.xml
+EZ-Marker.lua
+EZ-Marker_UI.lua
