@@ -110,7 +110,13 @@ local function GetOrderPosition(markIdx)
 end
 
 local function Print(msg)
-    DEFAULT_CHAT_FRAME:AddMessage("|cffFF8800EZ-Marker:|r " .. tostring(msg))
+    local text = "|cffFF8800EZ-Marker:|r " .. tostring(msg)
+    for i = 1, 7 do
+        local frame = getglobal("ChatFrame" .. i)
+        if frame and frame:IsVisible() then
+            frame:AddMessage(text)
+        end
+    end
 end
 
 -- ============================================================
