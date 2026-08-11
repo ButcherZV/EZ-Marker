@@ -6,8 +6,8 @@
 -- target dies, and always applies the highest-priority free
 -- mark when the hotkey is pressed.
 --
--- NOTE: SetRaidTarget requires raid leader / assistant rank
---       in a raid group.  In a 5-man party any member can mark.
+-- NOTE: SetRaidTarget requires group leader / assistant rank
+--       in order to apply raid marks (icons) on enemy
 -- ============================================================
 
 EZMarker         = {}
