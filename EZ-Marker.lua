@@ -7,7 +7,7 @@
 -- mark when the hotkey is pressed.
 --
 -- NOTE: SetRaidTarget requires raid leader / assistant rank
---       in a raid group.  In a 5-man party any member can mark.
+--       in a raid group. 
 -- ============================================================
 
 EZMarker         = {}
@@ -33,6 +33,10 @@ local DEFAULT_ORDER = {8, 7, 6, 5, 4, 3, 2, 1}
 -- Intentionally NOT saved – always starts clean each session.
 local usedMarks = {}
 
+-- Counts pending SetRaidTarget calls made by this addon so that the
+-- resulting RAID_TARGET_UPDATE event doesn't trigger FreeGone.
+local suppressFreeGone = 0
+
 -- ============================================================
 -- Unit token scan list used when reconciling mark state.
 -- Covers the player's target/mouseover plus all party/raid
@@ -56,9 +60,7 @@ end
 -- Internal helpers
 -- ============================================================
 
--- Scan every accessible unit token; free any tracked slot whose mark
--- index is held by a dead unit.  Index-based, so same-name enemies
--- are handled correctly.
+-- Free any tracked slot whose mark index is on a dead unit in the scan list.
 local function FreeDead()
     for _, token in ipairs(SCAN_TOKENS) do
         if UnitExists(token) and UnitIsDead(token) then
@@ -66,6 +68,26 @@ local function FreeDead()
             if idx and idx ~= 0 and usedMarks[idx] then
                 usedMarks[idx] = nil
             end
+        end
+    end
+end
+
+-- Free any tracked slot whose mark index is no longer on ANY existing unit.
+-- Used when RAID_TARGET_UPDATE fires (a mark was added/removed in the world),
+-- which covers corpse despawn and manual mark removal.
+local function FreeGone()
+    local activeMarks = {}
+    for _, token in ipairs(SCAN_TOKENS) do
+        if UnitExists(token) then
+            local idx = GetRaidTargetIndex(token)
+            if idx and idx ~= 0 then
+                activeMarks[idx] = true
+            end
+        end
+    end
+    for idx in pairs(usedMarks) do
+        if not activeMarks[idx] then
+            usedMarks[idx] = nil
         end
     end
 end
@@ -160,6 +182,7 @@ function EZMarker:MarkNextTarget()
     end
 
     local targetName = UnitName("target")
+    suppressFreeGone = suppressFreeGone + 1
     SetRaidTarget("target", markIdx)
     usedMarks[markIdx] = targetName
 
@@ -191,6 +214,7 @@ function EZMarker:RemoveCurrentMark()
         return
     end
     local targetName = UnitName("target")
+    suppressFreeGone = suppressFreeGone + 1
     SetRaidTarget("target", 0)
     usedMarks[markIdx] = nil
     Print("Removed mark from " .. tostring(targetName) .. ".")
@@ -252,13 +276,28 @@ eventFrame:SetScript("OnEvent", function()
               " loaded.  Bind a key under |cffFFFF00Key Bindings > EZ-Marker|r." ..
               "  Type |cffFFFF00/ezm|r for settings.")
 
-    elseif event == "UNIT_DIED"
-        or event == "RAID_TARGET_UPDATE"
-        or event == "PLAYER_TARGET_CHANGED" then
-        -- All three events are opportunities to catch a marked
-        -- enemy dying.  UNIT_DIED may not fire for all mob types
-        -- in this client, so RAID_TARGET_UPDATE and target-change
-        -- act as fallbacks.
+    elseif event == "UNIT_DIED" then
+        -- arg1 is the exact token that just died; read its mark index NOW
+        -- before any target switch can make the unit inaccessible.
+        local idx = GetRaidTargetIndex(arg1)
+        if idx and idx ~= 0 and usedMarks[idx] then
+            usedMarks[idx] = nil
+        end
+        -- Also do a broad scan as a fallback for any other dead units.
+        FreeDead()
+
+    elseif event == "RAID_TARGET_UPDATE" then
+        if suppressFreeGone > 0 then
+            -- This event was caused by our own SetRaidTarget; skip FreeGone
+            -- to avoid falsely freeing marks on live un-targeted enemies.
+            suppressFreeGone = suppressFreeGone - 1
+        else
+            -- External change (death, corpse despawn, manual removal).
+            FreeGone()
+        end
+        FreeDead()
+
+    elseif event == "PLAYER_TARGET_CHANGED" then
         FreeDead()
     end
 end)
